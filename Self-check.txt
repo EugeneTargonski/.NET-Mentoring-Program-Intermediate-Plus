@@ -1,0 +1,144 @@
+1.	Components Diagram - Components diagram.mmd
+		High-level system architecture diagram using a graph layout
+		Shows Presentation, API Gateway, Backend Services, Data, and External Systems layers
+
+	State Machine Diagram - State machine diagram for a seat state.mmd
+		Models seat state transitions (Available, OnHold, Booked, Sold, Blocked)
+		Shows lifecycle of a seat from creation to completion
+
+	Sequence Diagram - Sequence diagram for buying a seat of a lowest price.mmd
+		Shows the interaction flow for purchasing the lowest-priced seat
+		Includes Customer, UI, API Gateway, and various microservices
+
+2.	Pros
+
+		Standardization
+			UML is an industry-standard notation recognized globally
+
+		Visualization
+			Transforms systems into clear, visual representations, helps stakeholders quickly grasp system architecture and workflows
+
+		Documentation
+			Serves as living documentation for software systems
+			Provides reference material for onboarding new team members
+			Captures design decisions and system behavior
+
+		Early Problem Detection	
+			Reveals design flaws before implementation
+			Helps identify bottlenecks, redundancies, and missing components
+			Reduces costly rework during development
+
+		Multiple Perspectives	
+			Different diagram types (sequence, state, component, class, etc.) show different views
+			Allows stakeholders to focus on relevant aspects of the system
+
+		Communication Bridge
+			Connects technical and non-technical stakeholders
+			Provides common language between developers, architects, and business analysts
+
+	Cons
+		Learning is needed
+			Requires understanding of UML notation and conventions
+			Different diagram types have specific rules and semantics
+			Team members need training to create and interpret diagrams effectively
+		Maintenance Overhead
+			Diagrams can become outdated as code evolves
+			Keeping documentation synchronized with implementation requires discipline
+		Time Investment
+			Creating detailed diagrams takes time away from coding
+			May slow down fast-paced or agile development cycles
+		Tool Dependency
+			Professional UML tools can be expensive
+			Different tools may have incompatible formats
+			Version control of diagrams can be challenging
+		Interpretation Variability
+			Despite standardization, people may interpret diagrams differently
+			Level of detail varies by author, leading to inconsistency
+		Not Executable
+			UML diagrams are descriptive, not prescriptive
+			Gap between design and implementation can still exist
+			Code and diagrams can drift apart without code generation tools
+
+3.
+	Structural Diagrams
+
+		Purpose: Show the static aspects of a system — what elements exist and how they're organized.
+
+		Describe the architecture and organization of components
+		Focus on relationships between entities
+		Represent the system's skeleton or blueprint
+		Generally time-independent (don't show sequence of events)
+
+	Behavioral Diagrams
+
+		Purpose: Show the dynamic aspects of a system — how elements behave and interact over time.
+
+		Describe processes, workflows, and interactions
+		Focus on what happens and when
+		Represent the system's behavior and functionality
+		Time-dependent (show sequence, state changes, or activities)
+
+	So the main differense between structural and behavioral diagrams is that structural diagrams focus on the static organization of the system, while behavioral diagrams focus on the dynamic interactions and processes within the system. Structural diagrams show what components exist and how they relate, while behavioral diagrams show how those components interact and change over time.
+	
+	In my solution:
+		Structural Diagram:
+			Components Diagram (system architecture)
+
+		Behavioral Diagrams:
+			Sequence Diagram (purchasing workflow)
+			State Machine Diagram (seat lifecycle)
+
+4.
+	Components Diagram (Structural)
+		Relationship Type:
+			Dependency (-->)
+				All relationships use the dependency arrow (-->), indicating that one component depends on or uses another.
+				Meaning: Component A calls/uses/requires Component B to function.
+
+	Sequence Diagram (Behavioral)
+		Relationship Type:
+			Message Synchronous Call (->>)
+					Sender waits for a response
+			Message Synchronous Return (-->>):
+					Indicates a return message from a synchronous call
+					Shows the flow of control back to the caller
+
+			Control Flow Relationships:
+				alt (Alternative): Conditional branching (e.g., "Payment successful" vs "Payment failed")
+				else: Alternative path in conditional logic
+				Note: Annotations explaining behavior
+
+	State Machine Diagram (Behavioral)
+		Relationship Type:
+			Transition (-->)
+				Indicates a change from one state to another
+				Labeled with the event/condition that triggers the transition (e.g., "HoldSeat", "Payment successful")
+
+5
+	A Sequence Diagram is a type of behavioral UML diagram that shows how objects or components interact with each other over time through a series of messages.
+
+	Key Characteristics
+	1. Time-Ordered Interactions
+		Shows the chronological order of messages between participants
+		Time flows from top to bottom
+		Earlier interactions appear at the top, later ones at the bottom
+	2. Participants (Actors & Objects)
+		Represented as boxes at the top of the diagram
+		Can be:
+			Actors (users/external entities)
+			Components (services, systems)
+			Objects (instances of classes)
+			Databases or External Systems
+	3. Lifelines
+		Vertical dashed lines extending down from each participant
+		Represent the participant's existence during the interaction
+	4. Messages
+		Arrows between lifelines showing communication
+		Synchronous messages (->>) : Sender waits for response
+		Return messages (-->>) : Response back to caller
+		Labels describe the action or method call
+	5. Control Structures
+		alt / else: Alternative paths (conditional logic)
+		loop: Repeated interactions
+		opt: Optional execution
+		par: Parallel execution
