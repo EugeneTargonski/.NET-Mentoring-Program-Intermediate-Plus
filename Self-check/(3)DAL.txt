@@ -1,0 +1,127 @@
+1. What are your steps to start designing database?
+	1.	Requirements Analysis
+		Identify data entities (e.g., Tickets, Users, Events)
+		Define relationships between entities
+		Determine access patterns and query requirements
+	2.	Conceptual Design
+		Create entity-relationship (ER) diagrams
+		Define attributes for each entity
+		Identify primary and foreign keys
+	3.	Logical Design
+		Choose database type (SQL vs NoSQL)
+		Normalize data (for SQL) or denormalize (for NoSQL)
+		Define schema/document structure
+	4.	Physical Design
+		Plan partitioning strategy
+		Define indexing strategy
+		Consider scalability and performance
+2. When can we say that our database is modeled correctly?
+	A database is modeled correctly when it meets the following criteria:
+	1. Functional Requirements
+		All business entities and their attributes are represented
+		All required queries can be executed efficiently
+		Data integrity constraints are enforced
+		Business rules are properly implemented
+	2. Performance Goals
+		Query response times meet SLA requirements
+		Writes/reads perform within acceptable limits
+		System scales with expected data growth
+		Indexing strategy supports common queries
+	3. Data Integrity
+		No data redundancy (unless intentional for NoSQL)
+		Referential integrity is maintained
+		No data anomalies (insertion, update, deletion)
+		Constraints prevent invalid data states
+	4. Maintainability
+		Schema is easy to understand and document
+		Changes can be made without major refactoring
+		Clear naming conventions
+		Well-organized structure
+	5. Validation Methods
+		Load testing with realistic data volumes
+		Query performance profiling
+		Review with stakeholders
+		Test edge cases and failure scenarios
+3. What is a Data Access Layer (DAL), and how does it simplify database interactions?
+	The Data Access Layer (DAL) is an architectural pattern that provides a centralized interface between your application's business logic and the data storage (database, files, APIs, etc.). It acts as an abstraction layer that encapsulates all data access logic.
+	Key Responsibilities:
+	1.	Database Connections - Managing connection lifecycle
+	2.	CRUD Operations - Create, Read, Update, Delete data
+	3.	Query Execution - Running SQL/NoSQL queries
+	4.	Data Mapping - Converting between database records and domain objects
+	5.	Transaction Management - Handling database transactions
+	Simplifying database interactions:
+	1. Separation of Concerns
+		Business logic doesn't know database details
+		Changes to database don't affect business rules
+	2. Reusability
+		Common database operations written once
+		Used across multiple parts of the application
+		Reduces code duplication
+	3. Maintainability
+		All database code in one place
+		Easier to update connection strings, queries
+		Centralized error handling
+	4. Testability
+		Can mock/stub DAL for unit testing
+		Test business logic without database
+		Use in-memory databases for testing
+	5. Security
+		Centralized SQL injection prevention
+		Consistent authorization checks
+		Parameterized queries enforced
+	6. Database Independence
+		Swap databases
+		Switch data sources
+		Business layer remains unchanged
+4. You need to implement a new service for a customer. How would you select database (SQL or NoSQL)?
+	1. Data Structure & Relationships
+	Choose SQL if:
+		Data has well-defined, stable schema
+		Complex relationships (many-to-many, foreign keys)
+		Data is highly normalized
+		ACID transactions are critical
+		Need complex joins across multiple tables
+	Choose NoSQL if:
+		Schema is flexible or evolving
+		Hierarchical/nested data structures
+		Denormalized data is acceptable
+		Documents/objects stored as-is
+		Minimal relationships between entities
+	2. Query Patterns
+	Choose SQL if:
+		Complex queries with multiple JOINs
+		Ad-hoc queries and reporting
+		Aggregations, GROUP BY, window functions
+		Unknown query patterns upfront
+		Need advanced filtering and sorting
+	Choose NoSQL if:
+		Simple key-value or document lookups
+		Known access patterns (query by ID, partition)
+		Reading entire documents
+		Time-series or log data
+		High-volume writes
+	3. Scalability Requirements
+	Choose SQL if:
+		Vertical scaling is sufficient
+		Data size: Up to several terabytes
+		Moderate read/write throughput
+		Consistency over availability
+		Transactions across multiple records
+	Choose NoSQL if:
+		Need horizontal scaling (distributed)
+		Data size: Terabytes to petabytes
+		Very high read/write throughput
+		Availability over strict consistency
+		Geographically distributed data
+	4. Consistency vs. Availability
+	Choose SQL if:
+		Strong consistency required (financial systems)
+		ACID guarantees mandatory
+		Data integrity is critical
+		Immediate consistency needed
+	Choose NoSQL if:
+		Eventual consistency acceptable
+		BASE model sufficient (Basically Available, Soft state, Eventually consistent)
+		High availability more important than immediate consistency
+		Can handle temporary inconsistencies
