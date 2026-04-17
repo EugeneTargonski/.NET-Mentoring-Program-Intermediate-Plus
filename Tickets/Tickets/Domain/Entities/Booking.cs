@@ -70,33 +70,3 @@ public class Booking : BaseEntity
         EntityType = nameof(Booking);
     }
 }
-
-public class SeatInfo
-{
-    [JsonPropertyName("seatId")]
-    public string SeatId { get; set; } = string.Empty;
-
-    [JsonPropertyName("seatNumber")]
-    public string SeatNumber { get; set; } = string.Empty;
-
-    [JsonPropertyName("row")]
-    public string? Row { get; set; }
-
-    [JsonPropertyName("section")]
-    public string? Section { get; set; }
-}
-
-public class EventInfo
-{
-    [JsonPropertyName("eventId")]
-    public string EventId { get; set; } = string.Empty;
-
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("eventDate")]
-    public DateTime EventDate { get; set; }
-
-    [JsonPropertyName("venueName")]
-    public string? VenueName { get; set; }
-}
