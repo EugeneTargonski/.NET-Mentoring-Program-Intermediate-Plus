@@ -35,10 +35,7 @@ public class CosmosRepository<T>(Container container, ILogger<CosmosRepository<T
         }
         catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
         {
-            if (_logger.IsEnabled(LogLevel.Warning))
-            {
-                _logger.LogWarning("{EntityType} with ID: {Id} not found", typeof(T).Name, id);
-            }
+            _logger.LogWarning("{EntityType} with ID: {Id} not found", typeof(T).Name, id);
             return null;
         }
         catch (Exception ex)
