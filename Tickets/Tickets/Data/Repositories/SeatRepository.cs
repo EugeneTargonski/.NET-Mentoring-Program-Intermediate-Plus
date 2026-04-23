@@ -75,10 +75,7 @@ public class SeatRepository(Container container, ILogger<CosmosRepository<Seat>>
 
             if (seat == null || seat.Status != SeatStatus.Available)
             {
-                if (_logger.IsEnabled(LogLevel.Warning))
-                {
-                    _logger.LogWarning("Seat ID: {SeatId} is not available", seatId);
-                }
+                _logger.LogWarning("Seat ID: {SeatId} is not available", seatId);
                 return false;
             }
 
@@ -98,10 +95,7 @@ public class SeatRepository(Container container, ILogger<CosmosRepository<Seat>>
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
         {
-            if (_logger.IsEnabled(LogLevel.Warning))
-            {
-                _logger.LogWarning("Concurrency conflict while holding seat ID: {SeatId}", seatId);
-            }
+            _logger.LogWarning("Concurrency conflict while holding seat ID: {SeatId}", seatId);
             return false;
         }
         catch (Exception ex)
@@ -162,10 +156,7 @@ public class SeatRepository(Container container, ILogger<CosmosRepository<Seat>>
 
             if (seat == null || seat.Status != SeatStatus.OnHold)
             {
-                if (_logger.IsEnabled(LogLevel.Warning))
-                {
-                    _logger.LogWarning("Seat ID: {SeatId} is not in OnHold status", seatId);
-                }
+                _logger.LogWarning("Seat ID: {SeatId} is not in OnHold status", seatId);
                 return false;
             }
 
@@ -183,10 +174,7 @@ public class SeatRepository(Container container, ILogger<CosmosRepository<Seat>>
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
         {
-            if (_logger.IsEnabled(LogLevel.Warning))
-            {
-                _logger.LogWarning("Concurrency conflict while reserving seat ID: {SeatId}", seatId);
-            }
+            _logger.LogWarning("Concurrency conflict while reserving seat ID: {SeatId}", seatId);
             return false;
         }
         catch (Exception ex)
