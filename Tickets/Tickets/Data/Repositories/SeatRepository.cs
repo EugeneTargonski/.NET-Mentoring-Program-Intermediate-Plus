@@ -46,12 +46,12 @@ public class SeatRepository(Container container, ILogger<CosmosRepository<Seat>>
             }
 
             var seats = await QueryAsync(
-                s => s.Status == SeatStatus.Available,
+                s => s.Status == SeatStatus.Available && s.CurrentOffer != null,
                 partitionKey: eventId,
                 cancellationToken: cancellationToken);
 
             // Sort by price (lowest first) - offers are embedded
-            return seats.OrderBy(s => s.CurrentOffer?.Price ?? decimal.MaxValue)
+            return seats.OrderBy(s => s.CurrentOffer!.Price)
                        .ThenBy(s => s.Section)
                        .ThenBy(s => s.Row);
         }
