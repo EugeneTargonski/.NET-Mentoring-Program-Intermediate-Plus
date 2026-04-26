@@ -1,0 +1,42 @@
+1. What are the benefits and drawbacks of async programming?
+	+
+	Treads are not blocked and can be reused.
+	Keeps user interfaces responsive during long time operations.
+	-
+	Deadlock risks.
+	Harder to debug.
+	More complex.
+
+2. How to make APS.NET controller action support async flow?
+	Implement long-time operations (I/O, complex calculations) using Async methods.
+
+3. How does async flow influences APS.NET request executions (life cycle)?
+	1. Request arrives.
+	2. Thread pool assigns a thread to the request.
+	3. Thread starts async operation until await instruction.
+	4. Thread returns to pool.
+	5. When I/O completes, any available thread continues the request.
+	6. Response sent, thread returns to pool.
+
+4. List at least 5 tips on ASP.NET API performance best practices.
+	1. Use Async/Await for I/O or heavy operations.
+	2. Implement response caching and compression.
+	3. Use efficient database queries.
+	4. Implement pagination for large datasets.
+	5. Use DI with proper lifetimes.
+
+5. Vertical vs Horizontal scalability. Where to use each?
+	Vertical Scaling (more powerful instance):
+	1. Monolithic applications.
+	2. Database servers.
+	3. Heavy computational tasks.
+
+	Horizontal Scaling (adding aditional instances):
+	1. High traffic/availability.
+	2. Geographic distribution.
+	3. Microservices architecture.
+	4. Cost optimization at scale.
+
+	
+6. Explain why the PUT method was suggested for the book action on the order.
+	Booking is not creating something new (POST), it's transitioning an existing order to a "booked" state (PUT).
