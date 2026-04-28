@@ -1,5 +1,5 @@
 1. What is the Async programming in C#?
-	Async programming in C# is a programming pattern that allows you to write non-blocking code for I/O-bound and 	network-bound operations, improving application responsiveness and scalability.
+	Async programming in C# is a programming pattern that allows you to write non-blocking code for I/O-bound and network-bound operations, improving application responsiveness and scalability.
 
 
 2. What are the key operators that are used for asynchronous operation? 
@@ -9,7 +9,7 @@
 
 3. If you mark a method with the async keyword, does this mean that the method is executed asynchronously?
 	No.
-	The async keyword is a compiler hint that allows to use the await keyword inside the method and ells the 	compiler to transform your method into a state machine.
+	The async keyword is a compiler hint that allows to use the await keyword inside the method and ells the compiler to transform your method into a state machine.
 
 
 4. What Asynchronous programming patterns do you know?

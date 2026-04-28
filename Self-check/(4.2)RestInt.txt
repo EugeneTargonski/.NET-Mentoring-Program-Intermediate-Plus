@@ -1,0 +1,55 @@
+1. Explain the difference between terms: REST and RESTful.
+	REST - The architectural style 
+	RESTful - something following REST
+
+2. What are the six constraints?
+	Uniform interface
+	Client-server architecture
+	Stateless
+	Cashable
+	Layered system
+	Code of demand
+
+3. Is HTTP the only protocol supported by REST?
+	No, REST is the architectural style and can be implemented using any protocol.
+	HTTP just is the most common
+
+
+4.1 HTTP Request Methods (the difference)
+	GET - Retrieves resources (safe, idempotent, cacheable).
+	POST - Creates new resources (not idempotent).
+	PUT - Replaces entire resource (idempotent).
+	PATCH - Partially updates resource (should be idempotent).
+	DELETE - Removes resource (idempotent).
+	HEAD - Like GET but returns only headers.
+	OPTIONS - Returns supported methods.
+4.2 and HTTP Response codes. 
+	1xx - Informational (100 Continue). 
+	2xx - Success (200 OK, 201 Created, 204 No Content). 
+	3xx - Redirection (301 Moved Permanently, 304 Not Modified). 
+	4xx - Client errors (400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found). 
+	5xx - Server errors (500 Internal Server Error, 503 Service Unavailable).
+4.3 What is idempotency?
+	Idempotency means making the same request multiple times produces the same result as making it once, with no additional side effects. Idempotent methods: GET, PUT, DELETE, HEAD, OPTIONS. Not idempotent: POST
+
+5. What are the advantages of statelessness in RESTful services?
+	Scalability
+	Reliability and Fault Tolerance
+	Simplified Server Design
+	Better Caching
+	Improved Testability
+	Independent Requests
+
+6. What resource naming best practices are?
+	Use Nouns, Not Verbs
+	Use Plural Nouns for Collections
+	Use Hierarchical Relationships
+	Use Lowercase and Hyphens
+	Filtering, Sorting, and Pagination via Query Strings
+
+7. What is Richardson Maturity Model?
+	The Richardson Maturity Model measures REST API maturity across 4 levels (0-3):
+	Level 0 (Swamp of POX) - Single URI endpoint, single HTTP method (usually POST), everything determined by request body content. This is basically RPC over HTTP.
+	Level 1 (Resources) - Multiple URIs for different resources, but still using mostly POST for all operations. Resources are identified but not properly manipulated.
+	Level 2 (HTTP Verbs) - Multiple URIs + proper HTTP methods (GET, POST, PUT, DELETE) with correct status codes (200, 201, 404, etc.). This enables caching, idempotency, and proper HTTP semantics. This is where most real-world APIs should be.
+	Level 3 (Hypermedia/HATEOAS) - Level 2 + hypermedia controls - responses include links to related resources and available actions. The API becomes self-documenting and clients discover functionality through the responses themselves. This is the most RESTful but also optional for many use cases.
