@@ -1,0 +1,24 @@
+1. What is the Async programming in C#?
+	Async programming in C# is a programming pattern that allows you to write non-blocking code for I/O-bound and 	network-bound operations, improving application responsiveness and scalability.
+
+
+2. What are the key operators that are used for asynchronous operation? 
+	async - Marks a method as asynchronous
+	await - Pauses execution until the awaited task completes, and releases the thread
+
+
+3. If you mark a method with the async keyword, does this mean that the method is executed asynchronously?
+	No.
+	The async keyword is a compiler hint that allows to use the await keyword inside the method and ells the 	compiler to transform your method into a state machine.
+
+
+4. What Asynchronous programming patterns do you know?
+	Task-based Asynchronous Pattern (TAP) 
+
+
+5. Can a method contain multiple “await” key operators?
+	Yes, for sequential execution for example.
+
+
+6. What types can be returned?
+	Task, Task<T>, IAsyncEnumerable<T>, void (bad approach)
