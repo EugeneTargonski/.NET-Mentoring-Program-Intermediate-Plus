@@ -17,21 +17,14 @@ public class OrdersController(ICartService cartService) : ControllerBase
         return Ok(cart);
     }
 
-    [HttpPost("carts/{cartId}")]
+    [HttpPost("carts/{cartId}/items")]
     public async Task<IActionResult> AddToCart(
         string cartId,
         [FromBody] AddToCartRequest request,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var cart = await cartService.AddToCartAsync(cartId, request, cancellationToken);
-            return Ok(cart);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        var cart = await cartService.AddToCartAsync(cartId, request, cancellationToken);
+        return Ok(cart);
     }
 
     [HttpDelete("carts/{cartId}/events/{eventId}/seats/{seatId}")]
@@ -45,19 +38,12 @@ public class OrdersController(ICartService cartService) : ControllerBase
         return Ok(cart);
     }
 
-    [HttpPut("carts/{cartId}/book")]
+    [HttpPost("carts/{cartId}/bookings")]
     public async Task<IActionResult> BookCart(
         string cartId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var result = await cartService.BookCartAsync(cartId, cancellationToken);
-            return Ok(result);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        var result = await cartService.BookCartAsync(cartId, cancellationToken);
+        return Ok(result);
     }
 }

@@ -5,19 +5,12 @@ namespace Tickets.Controllers;
 
 [ApiController]
 [Route("api/venues")]
-public class VenuesController : ControllerBase
+public class VenuesController(IVenueService venueService) : ControllerBase
 {
-    private readonly IVenueService _venueService;
-
-    public VenuesController(IVenueService venueService)
-    {
-        _venueService = venueService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetVenues(CancellationToken cancellationToken)
     {
-        var venues = await _venueService.GetAllVenuesAsync(cancellationToken);
+        var venues = await venueService.GetAllVenuesAsync(cancellationToken);
         return Ok(venues);
     }
 
@@ -26,7 +19,7 @@ public class VenuesController : ControllerBase
         string venueId, 
         CancellationToken cancellationToken)
     {
-        var sections = await _venueService.GetVenueSectionsAsync(venueId, cancellationToken);
+        var sections = await venueService.GetVenueSectionsAsync(venueId, cancellationToken);
         return Ok(sections);
     }
 }

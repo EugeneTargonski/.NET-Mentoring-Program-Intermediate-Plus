@@ -27,6 +27,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Register global exception handler
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddProblemDetails();
+
         // Configure DI for DAL
         DependencyInjectionConfiguration.ConfigureServices(
             builder.Services,
@@ -36,6 +40,9 @@ public class Program
         builder.Services.AddAzureAppConfiguration();
 
         var app = builder.Build();
+
+        // Use global exception handler
+        app.UseExceptionHandler();
 
         // Use Azure App Configuration middleware for dynamic refresh
         app.UseAzureAppConfiguration();

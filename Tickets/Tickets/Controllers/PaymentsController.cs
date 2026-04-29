@@ -12,46 +12,25 @@ public class PaymentsController(IPaymentService paymentService) : ControllerBase
         string paymentId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var status = await paymentService.GetPaymentStatusAsync(paymentId, cancellationToken);
-            return Ok(status);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        var status = await paymentService.GetPaymentStatusAsync(paymentId, cancellationToken);
+        return Ok(status);
     }
 
-    [HttpPost("{paymentId}/complete")]
+    [HttpPatch("{paymentId}/complete")]
     public async Task<IActionResult> CompletePayment(
         string paymentId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var status = await paymentService.CompletePaymentAsync(paymentId, cancellationToken);
-            return Ok(status);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        var status = await paymentService.CompletePaymentAsync(paymentId, cancellationToken);
+        return Ok(status);
     }
 
-    [HttpPost("{paymentId}/failed")]
+    [HttpPatch("{paymentId}/failed")]
     public async Task<IActionResult> FailPayment(
         string paymentId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            var status = await paymentService.FailPaymentAsync(paymentId, cancellationToken);
-            return Ok(status);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        var status = await paymentService.FailPaymentAsync(paymentId, cancellationToken);
+        return Ok(status);
     }
 }
