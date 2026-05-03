@@ -24,7 +24,7 @@ public class OrdersController(ICartService cartService) : ControllerBase
         CancellationToken cancellationToken)
     {
         var cart = await cartService.AddToCartAsync(cartId, request, cancellationToken);
-        return Ok(cart);
+        return CreatedAtAction(nameof(GetCart), new { cartId }, cart);
     }
 
     [HttpDelete("carts/{cartId}/events/{eventId}/seats/{seatId}")]
@@ -34,8 +34,8 @@ public class OrdersController(ICartService cartService) : ControllerBase
         string seatId,
         CancellationToken cancellationToken)
     {
-        var cart = await cartService.RemoveFromCartAsync(cartId, eventId, seatId, cancellationToken);
-        return Ok(cart);
+        await cartService.RemoveFromCartAsync(cartId, eventId, seatId, cancellationToken);
+        return NoContent();
     }
 
     [HttpPost("carts/{cartId}/bookings")]
@@ -44,6 +44,10 @@ public class OrdersController(ICartService cartService) : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await cartService.BookCartAsync(cartId, cancellationToken);
-        return Ok(result);
+        return CreatedAtAction(
+            nameof(PaymentsController.GetPaymentStatus),
+            "Payments",
+            new { paymentId = result.PaymentId },
+            result);
     }
 }

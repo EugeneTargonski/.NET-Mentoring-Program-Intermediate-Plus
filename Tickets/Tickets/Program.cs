@@ -36,16 +36,22 @@ public class Program
             builder.Services,
             builder.Configuration);
 
-        // Add Azure App Configuration refresh support
-        builder.Services.AddAzureAppConfiguration();
+        // Add Azure App Configuration refresh support (not in Testing environment)
+        if (builder.Environment.EnvironmentName != "Testing")
+        {
+            builder.Services.AddAzureAppConfiguration();
+        }
 
         var app = builder.Build();
 
         // Use global exception handler
         app.UseExceptionHandler();
 
-        // Use Azure App Configuration middleware for dynamic refresh
-        app.UseAzureAppConfiguration();
+        // Use Azure App Configuration middleware for dynamic refresh (not in Testing environment)
+        if (!app.Environment.IsEnvironment("Testing"))
+        {
+            app.UseAzureAppConfiguration();
+        }
 
         // Configure the HTTP request pipeline
         if (app.Environment.IsDevelopment())

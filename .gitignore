@@ -7,3 +7,5 @@
 /Tickets/Tickets/bin
 /Tickets/Tickets/obj
 /Tickets/Tickets/appsettings.Development.json
+/Tickets/Tickets.Tests/bin
+/Tickets/Tickets.Tests/obj

@@ -31,7 +31,7 @@
 	2. Database servers.
 	3. Heavy computational tasks.
 
-	Horizontal Scaling (adding aditional instances):
+	Horizontal Scaling (adding additional instances):
 	1. High traffic/availability.
 	2. Geographic distribution.
 	3. Microservices architecture.

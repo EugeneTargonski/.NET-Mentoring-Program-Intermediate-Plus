@@ -117,12 +117,11 @@ public class CosmosDbContext(
 
         _inventoryDatabase = await _inventoryDbClient.CreateDatabaseIfNotExistsAsync(InventoryDatabaseName);
 
-        // Create container for Inventory Service (high-throughput for seat availability)
+        // Create container for Inventory Service (auto-scaled for seat availability queries)
         await CreateContainerIfNotExistsAsync(
             _inventoryDatabase, 
             SeatsContainerName, 
-            "/partitionKey", 
-            throughput: 10000); // Higher throughput for seat inventory queries
+            "/partitionKey");
 
         _logger.LogInformation("InventoryDb initialized successfully");
     }
@@ -141,7 +140,7 @@ public class CosmosDbContext(
         _transactionDatabase = await _transactionDbClient.CreateDatabaseIfNotExistsAsync(TransactionDatabaseName);
 
         // Create containers for Booking Service and Payment Service
-        await CreateContainerIfNotExistsAsync(_transactionDatabase, BookingsContainerName, "/partitionKey", throughput: 5000);
+        await CreateContainerIfNotExistsAsync(_transactionDatabase, BookingsContainerName, "/partitionKey");
         await CreateContainerIfNotExistsAsync(_transactionDatabase, PaymentsContainerName, "/partitionKey");
 
         _logger.LogInformation("TransactionDb initialized successfully");
@@ -224,6 +223,9 @@ public class CosmosDbContext(
 
     private static void ConfigureIndexingPolicy(string containerName, IndexingPolicy indexingPolicy)
     {
+        // Always include the root path for basic indexing
+        indexingPolicy.IncludedPaths.Add(new IncludedPath { Path = "/*" });
+
         switch (containerName)
         {
             case SeatsContainerName:
