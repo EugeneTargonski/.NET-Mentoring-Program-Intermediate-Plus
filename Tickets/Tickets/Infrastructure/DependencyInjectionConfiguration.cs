@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Caching.Memory;
 using Tickets.Data.Abstractions;
 using Tickets.Data.Configuration;
 using Tickets.Data.UnitOfWork;
@@ -38,9 +39,16 @@ public static class DependencyInjectionConfiguration
 
         // API services
         services.AddScoped<IVenueService, VenueService>();
-        services.AddScoped<IEventService, EventService>();
-        services.AddScoped<IEventCacheService>(sp => sp.GetRequiredService<IEventService>() as IEventCacheService 
-            ?? throw new InvalidOperationException("EventService must implement IEventCacheService"));
+
+        // Event service with decorator pattern (OCP compliance)
+        services.AddScoped<EventService>(); // Core implementation
+        services.AddScoped<IEventService>(sp => 
+            new CachedEventService(
+                sp.GetRequiredService<EventService>(), 
+                sp.GetRequiredService<IMemoryCache>()));
+
+        // Cache management service (SRP compliance)
+        services.AddScoped<IEventCacheService, EventCacheService>();
 
         // Use refactored services (SOLID-compliant)
         services.AddScoped<ICartService, CartService>();
