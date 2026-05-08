@@ -10,12 +10,14 @@ namespace Tickets.Tests.Controllers;
 public class OrdersControllerTests
 {
     private readonly Mock<ICartService> _mockCartService;
+    private readonly Mock<IEventCacheService> _mockEventCacheService;
     private readonly OrdersController _controller;
 
     public OrdersControllerTests()
     {
         _mockCartService = new Mock<ICartService>();
-        _controller = new OrdersController(_mockCartService.Object);
+        _mockEventCacheService = new Mock<IEventCacheService>();
+        _controller = new OrdersController(_mockCartService.Object, _mockEventCacheService.Object);
     }
 
     [Fact]
@@ -292,5 +294,62 @@ public class OrdersControllerTests
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(() => 
             _controller.BookCart(cartId, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task AddToCart_InvalidatesEventCache()
+    {
+        // Arrange
+        var cartId = "cart-123";
+        var request = new AddToCartRequest("event-1", "seat-1", "price-1");
+        var expectedCart = new CartDto(cartId, new List<CartItemDto>(), 0m);
+
+        _mockCartService
+            .Setup(s => s.AddToCartAsync(cartId, request, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedCart);
+
+        // Act
+        await _controller.AddToCart(cartId, request, CancellationToken.None);
+
+        // Assert
+        _mockEventCacheService.Verify(s => s.InvalidateCache(), Times.Once);
+    }
+
+    [Fact]
+    public async Task BookCart_InvalidatesEventCache()
+    {
+        // Arrange
+        var cartId = "cart-123";
+        var expectedResponse = new BookCartResponse("payment-456", 150m, new List<string>());
+
+        _mockCartService
+            .Setup(s => s.BookCartAsync(cartId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedResponse);
+
+        // Act
+        await _controller.BookCart(cartId, CancellationToken.None);
+
+        // Assert
+        _mockEventCacheService.Verify(s => s.InvalidateCache(), Times.Once);
+    }
+
+    [Fact]
+    public async Task RemoveFromCart_DoesNotInvalidateEventCache()
+    {
+        // Arrange
+        var cartId = "cart-123";
+        var eventId = "event-1";
+        var seatId = "seat-1";
+        var expectedCart = new CartDto(cartId, new List<CartItemDto>(), 0m);
+
+        _mockCartService
+            .Setup(s => s.RemoveFromCartAsync(cartId, eventId, seatId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedCart);
+
+        // Act
+        await _controller.RemoveFromCart(cartId, eventId, seatId, CancellationToken.None);
+
+        // Assert
+        _mockEventCacheService.Verify(s => s.InvalidateCache(), Times.Never);
     }
 }

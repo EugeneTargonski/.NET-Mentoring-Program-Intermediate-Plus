@@ -6,7 +6,7 @@ namespace Tickets.Controllers;
 
 [ApiController]
 [Route("api/orders")]
-public class OrdersController(ICartService cartService) : ControllerBase
+public class OrdersController(ICartService cartService, IEventCacheService eventCacheService) : ControllerBase
 {
     [HttpGet("carts/{cartId}")]
     public async Task<IActionResult> GetCart(
@@ -24,6 +24,7 @@ public class OrdersController(ICartService cartService) : ControllerBase
         CancellationToken cancellationToken)
     {
         var cart = await cartService.AddToCartAsync(cartId, request, cancellationToken);
+        eventCacheService.InvalidateCache();
         return CreatedAtAction(nameof(GetCart), new { cartId }, cart);
     }
 
@@ -44,6 +45,7 @@ public class OrdersController(ICartService cartService) : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await cartService.BookCartAsync(cartId, cancellationToken);
+        eventCacheService.InvalidateCache();
         return CreatedAtAction(
             nameof(PaymentsController.GetPaymentStatus),
             "Payments",

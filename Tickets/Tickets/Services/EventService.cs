@@ -1,16 +1,25 @@
+using Microsoft.Extensions.Caching.Memory;
 using Tickets.Data.Abstractions;
 using Tickets.DTOs;
 using Tickets.Services.Abstractions;
 
 namespace Tickets.Services;
 
-public class EventService(IUnitOfWork unitOfWork) : IEventService
+public class EventService(IUnitOfWork unitOfWork, IMemoryCache cache) : IEventService, IEventCacheService
 {
+    private const string EventsCacheKey = "all_events";
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(30);
+
     public async Task<IEnumerable<EventDto>> GetAllEventsAsync(CancellationToken cancellationToken = default)
     {
+        if (cache.TryGetValue(EventsCacheKey, out IEnumerable<EventDto>? cachedEvents) && cachedEvents != null)
+        {
+            return cachedEvents;
+        }
+
         var events = await unitOfWork.Events.GetAllAsync(cancellationToken);
 
-        return events.Select(e => new EventDto(
+        var eventDtos = events.Select(e => new EventDto(
             e.Id,
             e.Name,
             e.Description,
@@ -19,7 +28,11 @@ public class EventService(IUnitOfWork unitOfWork) : IEventService
             e.VenueId,
             e.Category,
             e.IsActive
-        ));
+        )).ToList();
+
+        cache.Set(EventsCacheKey, eventDtos, CacheDuration);
+
+        return eventDtos;
     }
 
     public async Task<IEnumerable<EventSeatDto>> GetEventSeatsAsync(
@@ -40,7 +53,7 @@ public class EventService(IUnitOfWork unitOfWork) : IEventService
 
             if (!string.IsNullOrEmpty(seat.CurrentOfferId))
             {
-                var offer = await unitOfWork.Offers.GetByIdAsync(
+                        var offer = await unitOfWork.Offers.GetByIdAsync(
                     seat.CurrentOfferId, 
                     seat.CurrentOfferId, 
                     cancellationToken);
@@ -66,5 +79,10 @@ public class EventService(IUnitOfWork unitOfWork) : IEventService
         }
 
         return result;
+    }
+
+    public void InvalidateCache()
+    {
+        cache.Remove(EventsCacheKey);
     }
 }

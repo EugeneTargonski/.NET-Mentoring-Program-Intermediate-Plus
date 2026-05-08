@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Tickets\Tickets.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Examples\" />
+  </ItemGroup>
+
 </Project>

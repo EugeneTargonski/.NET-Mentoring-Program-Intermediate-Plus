@@ -14,6 +14,9 @@ public static class DependencyInjectionConfiguration
 {
     public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        // Add Memory Cache
+        services.AddMemoryCache();
+
         // Add Cosmos DB configuration
         var cosmosDbConfig = new CosmosDbConfiguration();
         configuration.GetSection("CosmosDb").Bind(cosmosDbConfig);
@@ -36,6 +39,8 @@ public static class DependencyInjectionConfiguration
         // API services
         services.AddScoped<IVenueService, VenueService>();
         services.AddScoped<IEventService, EventService>();
+        services.AddScoped<IEventCacheService>(sp => sp.GetRequiredService<IEventService>() as IEventCacheService 
+            ?? throw new InvalidOperationException("EventService must implement IEventCacheService"));
 
         // Use refactored services (SOLID-compliant)
         services.AddScoped<ICartService, CartService>();
