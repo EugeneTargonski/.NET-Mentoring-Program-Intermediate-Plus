@@ -27,6 +27,9 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Add Response Caching for HTTP caching support
+        builder.Services.AddResponseCaching();
+
         // Register global exception handler
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
@@ -61,6 +64,10 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        // Use Response Caching middleware (must be before UseAuthorization)
+        app.UseResponseCaching();
+
         app.UseAuthorization();
         app.MapControllers();
 
