@@ -1,0 +1,40 @@
+1. How ASP.NET API handles multiple requests?
+	Using a thread pool architecture. Each incoming HTTP request is initially assigned a thread from the thread pool. When controller uses async methods, the thread is released back to the pool during the wait. When the I/O operation completes, any available thread picks up the continuation.
+
+2. What are the benefits and downsides of caching? When should we consider applying caching?
+Benefits:
+	1. Performance - faster response times
+	2. Reduced Load - Less pressure on databases, external APIs, and backend services
+	3. Cost Savings - Fewer database queries can lead lower infrastructure costs
+	4. Scalability - Handle more concurrent users with the same resources
+	5. Availability - Can serve cached data even if the backend is temporarily unavailable
+Downsides
+	1. Cache Invalidation - it requires balancing data freshness with performance; failing to invalidate correctly leads to users seeing old data
+	2. Complexity - Adds another layer to debug and maintain
+	3. Memory Consumption - Caching uses RAM/storage
+	4. Cold Start - First request is still slow (cache miss)
+
+3. What are the differences between In-memory, Distributed or Request caching options?
+	In-Memory Cache stores data in local server RAM (fast but not shared across instances), Distributed Cache shares data across multiple servers using external stores like Redis (slower but scalable), and Response Caching uses HTTP headers to cache entire responses at the client/proxy/server level (best for public, static content).
+
+4. What does ‘session affinity’ and ‘thread affinity’ mean? When do we have to consider session affinity?
+	Session Affinity (Sticky Sessions) - Routes a user's requests to the same server instance in a load-balanced setup.
+	Thread Affinity - Binds operations to a specific thread (rare in modern .NET; mostly for COM interop or UI threads).
+	When to consider Session Affinity:
+	- Using In-Memory Cache or session state without distributed storage (Redis/SQL)
+	- Can't refactor to use distributed cache
+	- Temporary workaround before migrating to stateless architecture
+Session affinity reduces scalability and complicates deployments—prefer distributed cache (Redis) for multi-server scenarios so any server can handle any request.
+
+5. What are the race conditions and deadlocks? Do they possible in a single threaded application?
+	Race Condition: Multiple threads/operations access shared data concurrently, causing unpredictable results based on timing (e.g., two requests updating the same ticket count simultaneously).
+	Deadlock: Two or more threads wait indefinitely for each other to release resources (e.g., Thread A locks Resource 1 and waits for Resource 2, while Thread B locks Resource 2 and waits for Resource 1).
+	They are not possible in synchronous single-threaded code, but possible in async single-threaded code.
+
+6. Why is it not safe to use static constructors/fields when your code is running in a multithreaded application?
+	Static constructors are actually thread-safe in .NET (guaranteed to run once by runtime), but mutable static fields are unsafe because multiple threads can read/write them concurrently without synchronization, causing race conditions.
+
+7. What  objects and features .NET proposes to solve race conditions and deadlocks?
+	- Monitor, lock, Mutex, SemaphorSlim, ReaderWriterLockSlim, ConcurrentCollections.
+	- Interlocked for atomic operations.
+	- Immutable objects.
