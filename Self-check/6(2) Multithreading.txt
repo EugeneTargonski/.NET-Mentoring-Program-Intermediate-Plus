@@ -1,0 +1,72 @@
+1. What is the purpose of threading in C#?
+	Threading enables concurrent execution of multiple operations within a single application, allowing to perform background tasks, improve responsiveness (keep UI active while processing), and maximize CPU utilization by running multiple operations in parallel.
+
+
+2. What is the difference between thread and process?
+	Process is an independent program in execution with its own memory space and resources (isolated), while a Thread is a lightweight unit of execution within a process that shares the same memory space and resources with other threads in that process.
+	
+
+
+3. What is the difference between thread, thread pool and TPL? What is the preferred way to write multithreaded and parallel code?
+	Thread is a lightweight unit of execution.
+	Thread Pool is a managed pool of reusable worker threads that automatically scales based on workload.
+	TPL (Task Parallel Library) is high-level abstraction built on top of thread pool, using Task and Task<T>
+What is the preferred way to write multithreaded and parallel code? - use TPL.
+
+
+
+4. Describe a flow how exceptions are handled in threads?
+	Exception is captured and stored in the Task object
+	Propagates when you await or access .Result/.Wait()
+	Unobserved exceptions (never checked) trigger TaskScheduler.UnobservedTaskException event
+
+
+5. What is the difference between foreground and background threads?
+	Foreground threads keep the application running until they complete, while background threads are automatically terminated when all foreground threads finish.
+	Thread pool threads are background threads
+	When you shut down the application, background threads are aborted
+
+
+6. What is the difference between managed and unmanaged threads?
+	Managed threads are created and managed by the .NET CLR (using Thread, Task, ThreadPool) with automatic garbage collection, exception handling, and thread monitoring, while unmanaged threads are native OS threads created outside .NET that the CLR doesn't directly control.
+
+7. What is spinning and how is it different from Blocking?
+	Spinning is when a thread continuously checks a condition in a tight loop (actively uses CPU while waiting), while Blocking is when a thread releases the CPU and sleeps until signaled by the OS (passively waits).
+
+
+8. What is Mutex? How is it different from other synchronization primitives?
+	Mutex is a synchronization primitive that can work across multiple processes (via named mutexes) and enforces ownership (only the acquiring thread from multiple processes can release it), unlike other synchronization primitives which only work within a single process and don't enforce ownership.
+
+
+9. What ways/options to avoid deadlocks and race conditions and other threading issues do you know ?
+	Design for Immutability & Statelessness
+	Use Async/Await Consistently
+	Prefer Lock-Free Concurrent Collections
+	SemaphoreSlim for Async Locking, and never await inside lock
+	Lock Ordering Convention
+	Keep Locks Short & Simple
+	Use Timeout & CancellationToken
+
+
+10. What is the difference between lock and monitor?
+	Lock is actually syntactic sugar for Monitor—they're fundamentally the same, but lock is safer and more convenient.	
+
+11. How to write thread safe code?
+	Avoid Shared Mutable State
+	Use Concurrent Collections
+	Use Proper Synchronization for Async Code
+	Keep Critical Sections Small
+
+
+12. Name potential pitfalls in Task Parallelism?
+	Shared Mutable State & Race Conditions
+	Blocking in Parallel Tasks
+	Exception Handling Complexity
+	Unobserved Task Exceptions
+	Not Using CancellationToken
+	Nested Parallelism
+	Using Non-Thread-Safe Collections
+
+
+13. What is the difference between attached and detached Child Tasks?
+	Attached child tasks force the parent task to wait for their completion and propagate exceptions to the parent, while detached child tasks run independently without blocking the parent or automatically propagating exceptions.

@@ -24,7 +24,7 @@ Downsides
 	- Using In-Memory Cache or session state without distributed storage (Redis/SQL)
 	- Can't refactor to use distributed cache
 	- Temporary workaround before migrating to stateless architecture
-Session affinity reduces scalability and complicates deployments—prefer distributed cache (Redis) for multi-server scenarios so any server can handle any request.
+Session affinity reduces scalability and complicates deployments - prefer distributed cache (Redis) for multi-server scenarios so any server can handle any request.
 
 5. What are the race conditions and deadlocks? Do they possible in a single threaded application?
 	Race Condition: Multiple threads/operations access shared data concurrently, causing unpredictable results based on timing (e.g., two requests updating the same ticket count simultaneously).
