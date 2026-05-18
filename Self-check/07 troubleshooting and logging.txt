@@ -1,0 +1,32 @@
+1. What are the differences between performance, load, and stress testing?
+
+	Performance Testing is about how a system behaves under various conditions. It measures speed, responsiveness, stability, and resource usage.
+
+	Load Testing evaluates system behavior under expected or normal load conditions. It verifies the application can handle the anticipated number of concurrent users or transactions while maintaining acceptable response times.
+
+Stress Testing pushes the system beyond normal capacity to find its breaking point. It identifies maximum load limits, how the system fails, and whether it recovers gracefully.
+
+2. When would you prefer vertical scaling over horizontal?
+
+Vertical Scaling:
+	Application isn't distributed-ready - Legacy applications or databases that can't easily run across multiple servers
+	Simplicity matters - Single server means no distributed system complexity, no load balancing, simpler deployment and maintenance
+	Licensing costs - Some software licenses are per-instance, making one powerful server cheaper than multiple smaller ones
+	Consistency requirements - No network latency between components, simpler ACID transactions, no distributed data consistency issues
+	Memory-intensive workloads - Applications needing large shared memory that can't be partitioned (in-memory databases, caching)
+	Quick short-term fix - Faster to implement than refactoring for horizontal scaling
+
+Horizontal Scaling:
+	Web applications
+	Microservices
+	High availability requirements
+	Cloud-native applications
+	Unpredictable or elastic workload patterns
+
+3. Does ASP.NET Core API support horizontal scaling? Explain your answer.
+
+	Yes, because:
+	Stateless by default - Each API request is independent; no server-side session state stored in memory by default
+	Cross-platform - Runs on Windows, Linux, and containers (Docker), making it easy to deploy across multiple instances
+	Lightweight & fast - Efficient resource usage means you can run many instances cost-effectively
+	Built-in features - Dependency injection, middleware pipeline, and async/await patterns support scalable architectures
