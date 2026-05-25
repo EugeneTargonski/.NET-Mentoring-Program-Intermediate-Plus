@@ -1,0 +1,32 @@
+1. What is a message queue? What do message queues store and transfer? 
+
+	Message queue is an asynchronous system that stores and transfers messages between different systems.
+	Message - some short amount of data.
+
+2. Describe the publisher/subscriber pattern. The difference between Pub/Sub and Observable patterns.
+
+	Publisher sends message to queue/topic. Publisher doesn't know who gets the message.
+	Subscriber receives the message from specific queue/topic.
+	
+	Observable - usually synchronous, direct connection between observer and observable, observers must be alive when the event appears.
+
+3. What is a Message Bus? How does it work? 
+
+	Message Bus is a distributed system that provides a way for one or more application to communicate messages to one or more other applications.
+
+	Publisher creates a message and sends it to a specific queue/topic on the bus.
+	The message bus receives the message. It does not need to know who will process it; it simply matches the queue/topic to the list of interested subscribers.
+	The bus broadcasts or forwards the message to all components that have subscribed to that queue/topic
+
+4. What is the difference between message queue and web services?
+
+	Message queues and web services are two different approaches to communication between applications and services. Web services use request-response communication, message queues use async communication through message broker.
+
+5. Describe the difference between RabbitMQ and Kafka. Provide some use cases for each of them: in which scenarios you’ll use RabbitMQ, Kafka?
+
+	RabbitMQ is a message broker for reliable task delivery with flexible routing. Messages are deleted after consumption.
+	Kafka is a distributed event log for high-throughput streaming. Messages are retained for replay.
+
+	Use Cases:
+	RabbitMQ: Task queues (background jobs, notifications, emails), microservices communication, complex routing needs, traditional request-reply patterns.
+	Kafka: Event streaming, real-time analytics, log aggregation, event sourcing, high-throughput scenarios, when you need to replay events.
