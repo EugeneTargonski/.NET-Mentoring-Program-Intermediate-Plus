@@ -1,4 +1,5 @@
-﻿<Solution>
+<Solution>
   <Project Path="Tickets/Tickets.csproj" />
   <Project Path="Tickets.Tests/Tickets.Tests.csproj" />
-</Solution>
+  <Project Path="NotificationHandler/NotificationHandler.csproj" />`r`n</Solution>
+

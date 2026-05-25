@@ -13,7 +13,8 @@ namespace Tickets.Services.Infrastructure;
 public class BookingService(
     IUnitOfWork unitOfWork,
     ISeatService seatService,
-    IDateTimeProvider dateTimeProvider) : IBookingService
+    IDateTimeProvider dateTimeProvider,
+    INotificationService notificationService) : IBookingService
 {
     public async Task<BookCartResponse> CreateBookingFromCartAsync(
         string cartId,
@@ -91,6 +92,31 @@ public class BookingService(
         };
 
         await unitOfWork.Payments.CreateAsync(payment, cancellationToken);
+
+        // Send notification asynchronously (fire-and-forget pattern)
+        // Using Task.Run to avoid blocking the main flow
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var orderSummary = $"Booked seats: {string.Join(", ", bookedSeats)}";
+                await notificationService.SendNotificationAsync(
+                    operationName: "Ticket Successfully Checked Out",
+                    customerEmail: $"{customerId}@example.com", // In production, get from user profile
+                    customerName: customerId, // In production, get from user profile
+                    orderAmount: totalAmount,
+                    orderSummary: orderSummary,
+                    paymentId: payment.Id,
+                    cartId: cartId,
+                    cancellationToken: CancellationToken.None // Use separate token for background operation
+                );
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't fail the booking
+                Console.WriteLine($"Failed to send notification: {ex.Message}");
+            }
+        }, CancellationToken.None);
 
         return new BookCartResponse(
             payment.Id,

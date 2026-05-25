@@ -23,6 +23,11 @@ public static class DependencyInjectionConfiguration
         configuration.GetSection("CosmosDb").Bind(cosmosDbConfig);
         services.AddSingleton(cosmosDbConfig);
 
+        // Add Service Bus configuration
+        var serviceBusSettings = new ServiceBusSettings();
+        configuration.GetSection("ServiceBus").Bind(serviceBusSettings);
+        services.AddSingleton(serviceBusSettings);
+
         // Register Cosmos DB infrastructure
         CosmosDbServiceRegistration.RegisterCosmosDbServices(services, cosmosDbConfig);
 
@@ -32,6 +37,13 @@ public static class DependencyInjectionConfiguration
         // Infrastructure services (DIP compliance)
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         services.AddSingleton<ICartStorageProvider, InMemoryCartStorageProvider>();
+
+        // Register NotificationService as singleton
+        services.AddSingleton<INotificationService>(sp =>
+        {
+            var settings = sp.GetRequiredService<ServiceBusSettings>();
+            return new NotificationService(settings.ConnectionString, settings.QueueName);
+        });
 
         // Domain services (SRP compliance)
         services.AddScoped<ISeatService, SeatService>();

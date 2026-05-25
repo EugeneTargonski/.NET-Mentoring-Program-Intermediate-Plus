@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "NotificationHandler\\NotificationHandler.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Tickets\\Tickets.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
