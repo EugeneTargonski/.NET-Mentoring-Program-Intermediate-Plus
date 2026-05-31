@@ -47,6 +47,11 @@ public class Program
 
         var app = builder.Build();
 
+        // Initialize Cosmos DB databases
+        // Note: DatabaseInitializer is registered as a singleton, so we can safely resolve it directly
+        var dbInitializer = app.Services.GetRequiredService<IDatabaseInitializer>();
+        await dbInitializer.InitializeAsync();
+
         // Use global exception handler
         app.UseExceptionHandler();
 

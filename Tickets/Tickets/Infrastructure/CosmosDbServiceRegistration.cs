@@ -17,24 +17,32 @@ public static class CosmosDbServiceRegistration
         IServiceCollection services, 
         CosmosDbConfiguration configuration)
     {
-        // Create and register Cosmos DB clients for each database
-        var eventDbClient = CreateCosmosClient(configuration.EventDb);
-        var inventoryDbClient = CreateCosmosClient(configuration.InventoryDb);
-        var transactionDbClient = CreateCosmosClient(configuration.TransactionDb);
-        var ticketDbClient = CreateCosmosClient(configuration.TicketDb);
+        // Register typed CosmosClient wrappers as singletons
+        // The DI container will automatically dispose them on application shutdown
+        services.AddSingleton(sp => 
+            new EventDbCosmosClient(CreateCosmosClient(configuration.EventDb)));
 
-        // Register clients as singletons
-        services.AddSingleton(_ => eventDbClient);
-        services.AddSingleton(_ => inventoryDbClient);
-        services.AddSingleton(_ => transactionDbClient);
-        services.AddSingleton(_ => ticketDbClient);
+        services.AddSingleton(sp => 
+            new InventoryDbCosmosClient(CreateCosmosClient(configuration.InventoryDb)));
 
-        // Register CosmosDbContext
-        services.AddSingleton(sp =>
+        services.AddSingleton(sp => 
+            new TransactionDbCosmosClient(CreateCosmosClient(configuration.TransactionDb)));
+
+        services.AddSingleton(sp => 
+            new TicketDbCosmosClient(CreateCosmosClient(configuration.TicketDb)));
+
+        // Register CosmosDbContext with explicit typed client resolution
+        services.AddSingleton<CosmosDbContext>(sp =>
         {
             var logger = sp.GetRequiredService<ILogger<CosmosDbContext>>();
             var config = sp.GetRequiredService<CosmosDbConfiguration>();
-            
+
+            // Resolve typed clients - type-safe and explicit
+            var eventDbClient = sp.GetRequiredService<EventDbCosmosClient>().Client;
+            var inventoryDbClient = sp.GetRequiredService<InventoryDbCosmosClient>().Client;
+            var transactionDbClient = sp.GetRequiredService<TransactionDbCosmosClient>().Client;
+            var ticketDbClient = sp.GetRequiredService<TicketDbCosmosClient>().Client;
+
             var context = new CosmosDbContext(
                 eventDbClient,
                 inventoryDbClient,

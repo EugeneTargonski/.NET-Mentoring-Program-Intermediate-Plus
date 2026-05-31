@@ -326,10 +326,11 @@ public class CosmosDbContext(
 
     public void Dispose()
     {
-        _eventDbClient?.Dispose();
-        _inventoryDbClient?.Dispose();
-        _transactionDbClient?.Dispose();
-        _ticketDbClient?.Dispose();
+        // NOTE: CosmosClient instances are registered as singletons in the DI container
+        // and are managed by the container's lifetime. We should not dispose them here
+        // because they may still be in use by other services.
+        // The DI container will handle their disposal when the application shuts down.
+
         GC.SuppressFinalize(this);
     }
 }
