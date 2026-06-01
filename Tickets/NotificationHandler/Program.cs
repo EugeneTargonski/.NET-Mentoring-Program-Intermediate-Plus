@@ -111,18 +111,18 @@ class Program
                 var mailjetCredentials = Convert.ToBase64String(
                     System.Text.Encoding.ASCII.GetBytes($"{mailjetApiKey}:{mailjetApiSecret}"));
 
-                services.AddHttpClient<IEmailProvider, MailjetEmailProvider>()
-                    .ConfigureHttpClient(client =>
-                    {
-                        client.BaseAddress = new Uri("https://api.mailjet.com/v3.1/");
-                        client.DefaultRequestHeaders.Add("Authorization", $"Basic {mailjetCredentials}");
-                    });
+                // Register named HttpClient with proper configuration
+                services.AddHttpClient("MailjetClient", client =>
+                {
+                    client.BaseAddress = new Uri("https://api.mailjet.com/v3.1/");
+                    client.DefaultRequestHeaders.Add("Authorization", $"Basic {mailjetCredentials}");
+                });
 
                 // Register MailjetEmailProvider with its dependencies
                 services.AddSingleton<IEmailProvider>(sp =>
                 {
                     var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
-                    var httpClient = httpClientFactory.CreateClient(nameof(MailjetEmailProvider));
+                    var httpClient = httpClientFactory.CreateClient("MailjetClient");
                     return new MailjetEmailProvider(httpClient, mailjetFromEmail, fromName);
                 });
 
