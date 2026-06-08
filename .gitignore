@@ -11,3 +11,6 @@
 /Tickets/Tickets.Tests/obj
 /Tickets/NotificationHandler/bin/Debug/net10.0
 /Tickets/NotificationHandler/obj
+/Tickets/Tickets/Properties/PublishProfiles
+/Tickets/Tickets/Properties/ServiceDependencies/tickets888 - Web Deploy
+/Tickets/Tickets/Properties
