@@ -1,0 +1,16 @@
+1. What are background workers, and how do they differ from other concurrency models in ASP.NET Core?
+
+	Background workers in ASP.NET Core are long-running tasks that execute independently.
+	Unlike request-scoped async operations, they run continuously regardless of web traffic. Unlike Task.Run(), they have proper lifecycle management and graceful shutdown. Unlike external services, they run in-process with web app, sharing resources and configuration.
+
+2. What are some common scenarios where background workers can be used in ASP.NET Core applications?
+
+	Time triggered tasks — perform some work after some time.
+	Reacting to changes in file/data stores.
+	Processing messages/queue/event/streams.
+
+3. What is the performance and scalability impact of using background workers in ASP.NET Core applications?
+
+	Offload work from request threads, improving response times.
+	Better resource utilization - background tasks run during idle periods.
+	Horizontal scaling - workers scale with your app instances.
