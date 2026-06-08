@@ -4,5 +4,6 @@ public record CartItemDto(
     string EventId,
     string SeatId,
     string PriceId,
-    decimal Amount
+    decimal Amount,
+    DateTime AddedAt
 );

@@ -14,3 +14,5 @@
 /Tickets/Tickets/Properties/PublishProfiles
 /Tickets/Tickets/Properties/ServiceDependencies/tickets888 - Web Deploy
 /Tickets/Tickets/Properties
+/Tickets/CartCleanupWorker/bin/Debug/net10.0
+/Tickets/CartCleanupWorker/obj

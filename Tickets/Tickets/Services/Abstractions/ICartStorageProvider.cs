@@ -13,4 +13,6 @@ public interface ICartStorageProvider
     Task RemoveItemAsync(string cartId, string eventId, string seatId, CancellationToken cancellationToken = default);
     Task ClearCartAsync(string cartId, CancellationToken cancellationToken = default);
     Task<bool> CartExistsAsync(string cartId, CancellationToken cancellationToken = default);
+    Task<List<(string CartId, CartItemDto Item)>> GetExpiredCartItemsAsync(DateTime expirationTime, CancellationToken cancellationToken = default);
+    Task<int> RemoveExpiredItemsAsync(DateTime expirationTime, CancellationToken cancellationToken = default);
 }

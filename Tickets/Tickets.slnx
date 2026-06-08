@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="Tickets/Tickets.csproj" />
   <Project Path="Tickets.Tests/Tickets.Tests.csproj" />
-  <Project Path="NotificationHandler/NotificationHandler.csproj" />`r`n</Solution>
+  <Project Path="NotificationHandler/NotificationHandler.csproj" />`r`n  <Project Path="CartCleanupWorker/CartCleanupWorker.csproj" />`r`n</Solution>
 

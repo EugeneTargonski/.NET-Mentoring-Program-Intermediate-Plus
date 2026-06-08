@@ -65,4 +65,41 @@ public class InMemoryCartStorageProvider : ICartStorageProvider
     {
         return Task.FromResult(_carts.ContainsKey(cartId));
     }
+
+    public Task<List<(string CartId, CartItemDto Item)>> GetExpiredCartItemsAsync(DateTime expirationTime, CancellationToken cancellationToken = default)
+    {
+        var expiredItems = new List<(string CartId, CartItemDto Item)>();
+
+        foreach (var cart in _carts)
+        {
+            var expired = cart.Value.Where(item => item.AddedAt < expirationTime);
+            expiredItems.AddRange(expired.Select(item => (cart.Key, item)));
+        }
+
+        return Task.FromResult(expiredItems);
+    }
+
+    public Task<int> RemoveExpiredItemsAsync(DateTime expirationTime, CancellationToken cancellationToken = default)
+    {
+        var removedCount = 0;
+
+        foreach (var cart in _carts)
+        {
+            var expiredItems = cart.Value.Where(item => item.AddedAt < expirationTime).ToList();
+
+            foreach (var item in expiredItems)
+            {
+                cart.Value.Remove(item);
+                removedCount++;
+            }
+
+            // Remove empty carts
+            if (cart.Value.Count == 0)
+            {
+                _carts.TryRemove(cart.Key, out _);
+            }
+        }
+
+        return Task.FromResult(removedCount);
+    }
 }

@@ -8,7 +8,8 @@ namespace Tickets.Services;
 public class CartService(
     ICartStorageProvider storageProvider,
     IBookingService bookingService,
-    IUnitOfWork unitOfWork) : ICartService
+    IUnitOfWork unitOfWork,
+    IDateTimeProvider dateTimeProvider) : ICartService
 {
     public async Task<CartDto> GetCartAsync(string cartId, CancellationToken cancellationToken = default)
     {
@@ -40,12 +41,27 @@ public class CartService(
             throw new InvalidOperationException($"Seat {request.SeatId} is not available");
         }
 
+        // Hold the seat for 15 minutes
+        var holdExpiresAt = dateTimeProvider.UtcNow.AddMinutes(15);
+        var holdSuccess = await unitOfWork.Seats.HoldSeatAsync(
+            request.SeatId,
+            request.EventId,
+            cartId, // Use cartId as customerId for cart-based holds
+            holdExpiresAt,
+            cancellationToken);
+
+        if (!holdSuccess)
+        {
+            throw new InvalidOperationException($"Failed to hold seat {request.SeatId}. It may have been taken by another user.");
+        }
+
         // Add item to cart
         var cartItem = new CartItemDto(
             request.EventId,
             request.SeatId,
             request.PriceId,
-            offer.Price
+            offer.Price,
+            dateTimeProvider.UtcNow
         );
 
         await storageProvider.AddItemAsync(cartId, cartItem, cancellationToken);
@@ -60,6 +76,16 @@ public class CartService(
         string seatId,
         CancellationToken cancellationToken = default)
     {
+        // Release the seat hold
+        var seat = await unitOfWork.Seats.GetByIdAsync(seatId, eventId, cancellationToken);
+        if (seat != null && seat.Status == SeatStatus.OnHold && seat.HeldByCustomerId == cartId)
+        {
+            seat.Status = SeatStatus.Available;
+            seat.HoldExpiresAt = null;
+            seat.HeldByCustomerId = null;
+            await unitOfWork.Seats.UpdateAsync(seat, cancellationToken);
+        }
+
         await storageProvider.RemoveItemAsync(cartId, eventId, seatId, cancellationToken);
         return await GetCartAsync(cartId, cancellationToken);
     }

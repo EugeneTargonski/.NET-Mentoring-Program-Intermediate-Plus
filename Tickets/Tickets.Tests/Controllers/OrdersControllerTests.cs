@@ -29,7 +29,7 @@ public class OrdersControllerTests
             cartId,
             new List<CartItemDto>
             {
-                new CartItemDto("event-1", "seat-1", "price-1", 100m)
+                new CartItemDto("event-1", "seat-1", "price-1", 100m, DateTime.UtcNow)
             },
             100m);
 
@@ -99,7 +99,7 @@ public class OrdersControllerTests
             cartId,
             new List<CartItemDto>
             {
-                new CartItemDto("event-1", "seat-1", "price-1", 100m)
+                new CartItemDto("event-1", "seat-1", "price-1", 100m, DateTime.UtcNow)
             },
             100m);
 
